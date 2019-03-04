@@ -1,0 +1,72 @@
+***Find the albums recorded by the artist Queen.***
+
+In [19]: Artist.objects.get(name='Queen')
+Out[19]: <Artist: Artist object (51)>
+
+In [15]: album_list = Album.objects.filter(artist=51)
+
+In [16]: album_list
+Out[16]: <QuerySet [<Album: Album object (32)>, <Album: Album object (181)>, <Album: Album object (182)>]>
+
+In [18]: for album in album_list:
+    ...:     print(album.title)
+    ...:
+Greatest Hits II
+Greatest Hits I
+News Of The World
+---------------------------------------------------------------------------------------------------------
+***Count how many tracks belong to the media type "Protected MPEG-4 video file".***
+
+In [20]: MediaType.objects.get(name='Protected MPEG-4 video file')
+Out[20]: <MediaType: MediaType object (3)>
+
+In [22]: Track.objects.filter(media_type_id=3).count()
+Out[22]: 214
+---------------------------------------------------------------------------------------------------------
+***Find the genre with the name "Hip Hop/Rap".***
+
+In [25]: Genre.objects.get(name='Hip Hop/Rap')
+Out[25]: <Genre: Genre object (17)>
+---------------------------------------------------------------------------------------------------------
+***Count how many tracks belong to the "Hip Hop/Rap" genre***
+In [28]: Track.objects.filter(genre=17).count()
+Out[28]: 35
+---------------------------------------------------------------------------------------------------------
+***Find the total amount of time required to listen to all the tracks in the database.***
+In [31]: Track.objects.aggregate(Sum('milliseconds'))
+Out[31]: {'milliseconds__sum': 1377942652}
+---------------------------------------------------------------------------------------------------------
+***Find the highest price of any track that has the media type "MPEG audio file".***
+In [38]: MediaType.objects.get(name='MPEG audio file')
+Out[38]: <MediaType: MediaType object (1)>
+
+In [41]: Track.objects.filter(media_type_id=1).aggregate(Max('unit_price'))
+Out[41]: {'unit_price__max': Decimal('0.99')}
+---------------------------------------------------------------------------------------------------------
+***Find the name of the most expensive track that has the media type "MPEG audio file".***
+In [47]: Track.objects.filter(media_type_id=1).order_by('-unit_price')[0].name
+Out[47]: 'Put The Finger On You'
+---------------------------------------------------------------------------------------------------------
+***Find the 2 oldest artists.***
+In [51]: Artist.objects.order_by('created_at')[0].name
+Out[51]: 'Les Arts Florissants & William Christie'
+
+In [50]: Artist.objects.order_by('created_at')[1].name
+Out[50]: 'Baby Consuelo'
+---------------------------------------------------------------------------------------------------------
+***Find the least expensive track that has the genre "Electronica/Dance".***
+
+In [53]: Genre.objects.get(name='Electronica/Dance')
+Out[53]: <Genre: Genre object (15)>
+
+In [54]: Track.objects.filter(genre=15).order_by('unit_price')[0].name
+Out[54]: 'Instinto Colectivo'
+---------------------------------------------------------------------------------------------------------
+***Find all "MPEG audio file" tracks in the genre "Electronica/Dance".***
+In [58]: Track.objects.filter(media_type=1, genre=15)
+Out[58]: <QuerySet [<Track: Track object (3319)>, <Track: Track object (3320)>, <Track: Track object (3321)>, <Track: Track object (3322)>, <Track: Track object (3323)>, <Track: Track object (3324)>, <Track: Track object (3325)>, <Track: Track object (3327)>, <Track: Track object (3328)>, <Track: Track object (3329)>, <Track: Track object (3330)>, <Track: Track object (3331)>, <Track: Track object (3333)>, <Track: Track object (3334)>, <Track: Track object (3335)>, <Track: Track object (1456)>, <Track: Track object (1463)>, <Track: Track object (1455)>, <Track: Track object (3326)>, <Track: Track object (3332)>, '...(remaining elements truncated)...']>
+
+In [59]: Track.objects.filter(media_type=1, genre=15).count()
+Out[59]: 28
+
+---------------------------------------------------------------------------------------------------------
